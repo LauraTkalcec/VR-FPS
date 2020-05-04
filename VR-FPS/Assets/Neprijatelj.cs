@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Neprijatelj : MonoBehaviour {
+public class Neprijatelj : MonoBehaviour
+
+{
+    public float brzina = 1f;
+    public Vector3 direction;
 
 	// Use this for initialization
 	void Start () {
@@ -10,7 +14,8 @@ public class Neprijatelj : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		
+	void Update ()
+    {
+        transform.position += direction * brzina * Time.deltaTime;
 	}
 }
