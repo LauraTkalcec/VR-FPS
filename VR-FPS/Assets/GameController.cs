@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
@@ -18,18 +20,18 @@ public class GameController : MonoBehaviour
     {
 		
 	}
-	    void OnTriggerEnter(Collider colider)
+	    void OnTriggerEnter(Collider collider)
     {
         if (collider.tag=="Neprijatelj")
         {
-            SceneManager.LoadScene(SceneManager.GerActiveScene().name);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
     }
 	// Update is called once per frame
 	void Update ()
     {
-        vrijemePucanja -= NeprijateljSpawningTimer.deltaTime;
+        vrijemePucanja -= Time.deltaTime;
         NeprijateljSpawningTimer -= Time.deltaTime;
         
         if (NeprijateljSpawningTimer<=0f)
@@ -39,11 +41,11 @@ public class GameController : MonoBehaviour
             GameObject enemyObject = Instantiate(neprijateljPrefab);
 
             float randomAngine = Random.Range(0, Mathf.PI * 2);
-            enemyObject.transform.position = new Vectro3(gameCamera.transform.position.x + Mathf.Cos(randomAngine) * NeprijateljSpawningDistance, 0,
+            enemyObject.transform.position = new Vector3(gameCamera.transform.position.x + Mathf.Cos(randomAngine) * NeprijateljSpawningDistance, 0,
                 gameCamera.transform.position.z + Mathf.Sin(randomAngine) * NeprijateljSpawningDistance);
 
-            Neprijatelj neprijatelj = enemyObject.GetComponent<neprijatelj>();
-            neprijatelj.derection = (gameCamera.transform.position - neprijatelj.transform.position).normalized;
+            Neprijatelj neprijatelj = enemyObject.GetComponent<Neprijatelj>();
+            neprijatelj.direction = (gameCamera.transform.position - neprijatelj.transform.position).normalized;
             neprijatelj.transform.LookAt(Vector3.zero);
         }
 
@@ -51,14 +53,14 @@ public class GameController : MonoBehaviour
 
         if (Physics.Raycast(gameCamera.transform.position,gameCamera.transform.forward,out hit))
         {
-            if(hit.transform.tag=="Neprijatelj" && vrijemePucnja<=0f)
+            if(hit.transform.tag=="Neprijatelj" && vrijemePucanja<=0f)
             {
                 vrijemePucanja = vrijemeMirovanjaPucanja = 0;
 
                 GameObject metakObject = Instantiate(metakPrefab);
                 metakObject.transform.position = gameCamera.transform.position;
 
-                metakObject metak = metakObject.GetComponent<Metak>();
+                Metak metak = metakObject.GetComponent<Metak>();
                 metak.direction = gameCamera.transform.forward;
                     
             }
